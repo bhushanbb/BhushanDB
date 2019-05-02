@@ -1,0 +1,90 @@
+To list the already avaliable user defined functions in database
+----------------------------------------------------------------
+SHOW Function STATUS WHERE Db = <database_name>; 
+
+
+
+
+SET GLOBAL log_bin_trust_function_creators = 1;
+
+Delimiter /
+
+Create function country (CountCountry varchar(20))
+Returns int
+
+Begin
+Return(Select count(*) from author where nationality=CountCountry);
+end /
+
+Delimiter ;
+
+Select country('USA');
+========================================================================
+Delimiter /
+
+create function DesignationWiseCount(dsgn varchar(10))
+Returns int
+Begin
+
+Return(select count(*) from employee where designation= dsgn);
+
+End /
+Delimiter ;
+
+======================================================================
+
+Delimiter /
+
+Create function getmember (yr int(10) , gender varchar(10))
+returns int
+
+Begin
+
+Return(select count(*) from member where year(doj) > yr and sex=gender);
+
+end /
+
+Delimiter ;
+
+======================================================================
+
+Delimiter /
+
+Create function chkuser(yr int(10))
+returns varchar(20)
+Begin
+
+declare usertype varchar(20);
+
+if(yr = 2019) then set usertype = 'Latest user';
+	Elseif(yr = 2018 ) then set usertype = 'Last year user';
+		elseif (yr<2018) then set usertype = 'Old user';
+end if;
+
+Return(usertype);
+
+End /
+
+Delimiter ;
+--> select year(doj),chkuser(year(doj)) from member;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

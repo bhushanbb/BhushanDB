@@ -1,0 +1,109 @@
+
+SHOW PROCEDURE STATUS WHERE Db = <database_name>;
+
+
+1) No input/output parameters, simple query
+
+Delimiter /
+create procedure getAllBooks()
+Begin
+
+Select bookname from book;
+
+End /
+
+Delimiter ;
+
+Call--> GetAllBooks;
+
+
+2) Singer Input parameter
+
+Delimiter /
+
+Create Procedure getAuthors(IN authorCountry varchar(10))
+
+Begin
+
+Select authorname,nationality from author where nationality = authorCountry;
+
+End /
+
+Delimiter ;
+
+Call getAuthors('UK');
+
+3) Single Input parameter
+
+Delimiter $
+create procedure getEmployeeByYear(IN yr int(10))
+Begin
+
+select employeename , year(doj) as 'Join Year' from employee where year(doj) = yr;
+
+End $
+
+Delimiter ;
+
+--> Call getEmployeeByYear('2019')
+
+4) one input parameter one output parameter
+
+Delimiter %
+
+Create procedure getMemberstatus (IN sts varchar(10) , OUT stsCount int(10))
+
+Begin
+
+Select count(status) into stscount from member where status = sts;
+
+End %
+
+Delimiter ;
+
+-->call getmemberstatus('Active',@count);
+
+Select 'Number of Active members are', @count;
+
+5) Two output parameters
+
+Delimiter @
+
+create procedure getMemberBySex(OUT maleCount int(10) , OUT femaleCount int(10))
+Begin
+
+Select count(memberid)  from member where sex = 'Male' into maleCount;
+Select count(memberid)  from member where sex = 'Female' into femaleCount;
+
+end @
+
+Delimiter ;
+
+call getmemberbysex(@mCount, @fCount);
+
+select 'Male Member Count' , @mcount;
+select 'Female Member Count' , @fcount;
+
+6) Using the function within procedure
+
+Delimiter #
+
+Create procedure getUserStatus(IN mbrId varchar(10), OUT mbrSts varchar(20))
+Begin
+
+declare yr int(10);
+
+Select year(doj) into yr from member where memberid = mbrId;
+
+select chkuser(yr) into mbrSts;
+
+End #
+
+Delimiter ;
+
+call getuserstatus('M007',@sts);
+select @sts;
+
+
+
+
